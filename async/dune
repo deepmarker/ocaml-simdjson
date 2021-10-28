@@ -1,0 +1,4 @@
+(library
+ (name            simdjson_async)
+ (public_name     simdjson-async)
+ (libraries       simdjson core async))

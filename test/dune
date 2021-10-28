@@ -1,0 +1,5 @@
+(test
+ (name test)
+ (flags -w -26)
+ (deps 2020-11-10_22-53-43.426713.raw.tmp depth.json exchangeInfo.json)
+ (libraries simdjson alcotest bigstringaf ocplib-json-typed))

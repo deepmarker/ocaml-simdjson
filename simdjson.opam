@@ -1,0 +1,18 @@
+opam-version: "2.0"
+authors: "Vincent Bernardoff <vb@luminar.eu.org>"
+maintainer: "Vincent Bernardoff <vb@luminar.eu.org>"
+homepage: "https://github.com/vbmithr/ocaml-simdjson"
+bug-reports: "https://github.com/vbmithr/ocaml-simdjson/issues"
+dev-repo: "git+https://github.com/vbmithr/ocaml-simdjson"
+doc: "https://vbmithr.github.io/ocaml-simdjson/doc"
+build: [ "dune" "build" "-j" jobs "-p" name ]
+run-test: [ "dune" "runtest" "-j" jobs "-p" name ]
+depends: [
+  "dune" {>= "1.11.4"}
+  "bigstringaf" {>= "0.6.1"}
+  "ocplib-json-typed" {>= "0.7.1"}
+  "alcotest" {with-test & >= "1.2.3"}
+]
+synopsis: "Parsing gigabytes of JSON per second"
+description: """
+"""

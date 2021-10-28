@@ -1,0 +1,10 @@
+(executable
+ (public_name parse)
+ (name parse)
+ (package simdjson-async)
+ (preprocess (pps ppx_jane))
+ (libraries
+   core
+   async
+   simdjson-async
+   yojson))
