@@ -96,6 +96,20 @@ let of_file ?exn ?batchSize t fn ~f =
   don't_wait_for (Pipe.closed r >>| fun () -> free_ds ds) ;
   r
 
+let repeat_until_finished ?batchSize t fn ~init ~f =
+  let ds = load_many ?batchSize t fn in
+  let seq = seq_of_ds t ds in
+  let run () =
+    Deferred.Or_error.repeat_until_finished (seq, init) (fun (seq, a) ->
+        match seq () with
+        | Seq.Nil -> Deferred.Or_error.return (`Finished a)
+        | Cons ((i, x), seq) -> (
+            f i a x
+            >>=? function
+            | `Finished a -> Deferred.Or_error.return (`Finished a)
+            | `Repeat a -> Deferred.Or_error.return (`Repeat (seq, a)) ) ) in
+  Monitor.protect run ~finally:(fun () -> free_ds ds ; Deferred.unit)
+
 (*---------------------------------------------------------------------------
    Copyright (c) 2021 The ocaml-simdjson programmers
 

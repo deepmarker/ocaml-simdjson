@@ -4,6 +4,8 @@
    %%NAME%% %%VERSION%%
   ---------------------------------------------------------------------------*)
 
+open Stdint
+
 type t
 type value
 type ds
@@ -29,7 +31,7 @@ val kind : value -> char
 val length : value -> int
 val bool_exn : value -> bool
 val int64_exn : value -> int64
-val uint64_exn : value -> int64
+val uint64_exn : value -> uint64
 val float_exn : value -> float
 val string_exn : value -> string
 val seq_obj_exn : value -> (string * value) Seq.t

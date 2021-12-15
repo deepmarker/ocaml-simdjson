@@ -12,6 +12,7 @@
 #include <caml/custom.h>
 #include <caml/fail.h>
 #include <caml/threads.h>
+#include <uint64.h>
 
 #define PRIM extern "C" CAMLprim
 
@@ -186,12 +187,10 @@ PRIM value parseMany_stubs (value parser, value buf, value len, value batchSize)
     x = caml_alloc_custom_mem(&dom_document_stream_ops,
                               sizeof (dom::document_stream),
                               sizeof(dom::document_stream));
-    caml_release_runtime_system();
     auto error = p->parse_many((const uint8_t*) Caml_ba_data_val(buf),
                                Long_val(len),
                                Long_val(batchSize)
                                ).get(*ds);
-    caml_acquire_runtime_system();
     if (error) {
         caml_invalid_argument(error_message(error));
     }
@@ -337,8 +336,14 @@ extern "C" value docStreamIteratorNext_stubs(value iter) {
     return Val_unit;
 }
 
-extern "C" value getBool_stubs(value elt) {
-    return Val_bool(bool(Element_val(elt)));
+PRIM value getBool_stubs(value elt) {
+    CAMLparam1(elt);
+    bool b;
+    auto error = Element_val(elt).get(b);
+    if (error) {
+        caml_invalid_argument(error_message(error));
+    }
+    CAMLreturn(Val_bool(b));
 }
 
 PRIM value getInt64_stubs(value elt) {
@@ -353,7 +358,7 @@ PRIM value getInt64_stubs(value elt) {
     CAMLreturn(x);
 }
 
-PRIM value getUint64_stubs(value elt) {
+PRIM value getUInt64_stubs(value elt) {
     CAMLparam1(elt);
     CAMLlocal1(x);
     uint64_t u64;
@@ -361,7 +366,7 @@ PRIM value getUint64_stubs(value elt) {
     if (error) {
         caml_invalid_argument(error_message(error));
     }
-    x = caml_copy_int64(u64);
+    x = copy_uint64(u64);
     CAMLreturn(x);
 }
 

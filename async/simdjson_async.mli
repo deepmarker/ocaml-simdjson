@@ -32,6 +32,14 @@ val of_file :
   f:(value -> 'a option) ->
   (int * 'a) Pipe.Reader.t
 
+val repeat_until_finished :
+  ?batchSize:int ->
+  t ->
+  string ->
+  init:'a ->
+  f:(int -> 'a -> value -> [`Finished of 'a | `Repeat of 'a] Deferred.Or_error.t) ->
+  'a Deferred.Or_error.t
+
 (*---------------------------------------------------------------------------
    Copyright (c) 2021 The ocaml-simdjson programmers
 

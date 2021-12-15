@@ -1,11 +1,9 @@
 (library
  (name            simdjson)
  (public_name     simdjson)
- (libraries       bigstringaf ocplib-json-typed)
+ (libraries       stdint bigstringaf ocplib-json-typed)
  (foreign_stubs
   (language cxx)
   (names mlsimdjson)
-  (flags :standard -D_REENTRANT)
- )
- (c_library_flags  -lpthread -lstdc++ -lsimdjson))
-
+  (flags :standard -D_REENTRANT))
+ (c_library_flags -lpthread -lstdc++ -lsimdjson))

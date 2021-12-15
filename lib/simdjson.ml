@@ -4,6 +4,8 @@
    %%NAME%% %%VERSION%%
   ---------------------------------------------------------------------------*)
 
+open Stdint
+
 type p
 type e
 type o
@@ -34,9 +36,9 @@ external loadMany : p -> string -> int -> ccds = "loadMany_stubs"
 external freeDs : ccds -> unit = "freeDs_stubs" [@@noalloc]
 
 (* *)
-external getBool : e -> bool = "getBool_stubs" [@@noalloc]
+external getBool : e -> bool = "getBool_stubs"
+external getUInt64 : e -> uint64 = "getUInt64_stubs"
 external getInt64 : e -> int64 = "getInt64_stubs"
-external getUint64 : e -> int64 = "getUint64_stubs"
 external getDouble : e -> float = "getDouble_stubs"
 external getString : e -> string = "getString_stubs"
 external getObject : e -> o = "getObject_stubs"
@@ -143,6 +145,8 @@ let seq_of_ds t {ds; gen; _} =
   loop
 
 let view ({e; gen} : value) =
+  (* let xx = elementType e in
+   * Printf.printf "%c%!" xx ; *)
   match elementType e with
   | '[' ->
       let a = getArray e in
@@ -167,12 +171,7 @@ let view ({e; gen} : value) =
           loop ((k, {e; gen}) :: acc) (pred len) in
       `O (loop [] (pred len))
   | 'l' -> `Float (Int64.to_float (getInt64 e))
-  | 'u' ->
-      let x = getUint64 e in
-      let x =
-        if x < 0L then Int64.(to_float (neg min_int) +. to_float (neg x))
-        else Int64.to_float x in
-      `Float x
+  | 'u' -> `Float (Uint64.to_float (getUInt64 e))
   | 'd' -> `Float (getDouble e)
   | '"' -> `String (getString e)
   | 't' -> `Bool (getBool e)
@@ -194,7 +193,7 @@ let repr_uid = Json_repr.repr_uid ()
 let kind {e; _} = elementType e
 let bool_exn {e; _} = getBool e
 let int64_exn {e; _} = getInt64 e
-let uint64_exn {e; _} = getUint64 e
+let uint64_exn {e; _} = getUInt64 e
 let float_exn {e; _} = getDouble e
 let string_exn {e; _} = getString e
 
