@@ -12,7 +12,10 @@
 #include <caml/custom.h>
 #include <caml/fail.h>
 #include <caml/threads.h>
+
+extern "C" {
 #include <uint64.h>
+}
 
 #define PRIM extern "C" CAMLprim
 
